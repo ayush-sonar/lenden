@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db import models
 from .models import Game, Move
-from .serializers import GameSerializer, MoveSerializer
+from .serializers import GameSerializer, MoveSerializer , GameDetailSerializer
 import random
 from .logic import Logic
 from users.models import User
@@ -121,3 +121,14 @@ class GameHistoryView(generics.ListAPIView):
             models.Q(p2=self.request.user),
             status='F'
         ).order_by('-created_at')
+
+class GameHistoryDetailView(generics.RetrieveAPIView):
+    serializer_class = GameDetailSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Game.objects.filter(
+            models.Q(p1=self.request.user) | 
+            models.Q(p2=self.request.user),
+            status='F'
+        )

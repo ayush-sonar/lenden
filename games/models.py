@@ -25,7 +25,7 @@ class Game(models.Model):
         return f'{self.p1} vs {self.p2}'
     
 class Move(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, related_name='moves', on_delete=models.CASCADE)
     player = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     pos_x = models.IntegerField()
     pos_y = models.IntegerField()

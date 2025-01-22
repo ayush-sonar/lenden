@@ -6,12 +6,12 @@ User = get_user_model()
 
 class MoveSerializer(serializers.ModelSerializer):
     player = serializers.CharField(source='player.username', read_only=True)
-
     class Meta:
         model = Move
-        fields = ('id', 'player', 'player_username', 'pos_x', 'pos_y', 
+        fields = ('id', 'player', 'pos_x', 'pos_y', 
                  'timestamp', 'move_number')
         read_only_fields = ('player', 'move_number')
+
 
 class GameSerializer(serializers.ModelSerializer):
     p1_username = serializers.CharField(source='p1.username', read_only=True)
@@ -27,4 +27,7 @@ class GameSerializer(serializers.ModelSerializer):
                  'winner_username', 'canvas', 'created_at', 'updated_at', 'moves')
         read_only_fields = ('canvas', 'winner', 'current_turn')
 
-
+class GameDetailSerializer(GameSerializer):
+    class Meta(GameSerializer.Meta):
+        model = Game
+        fields = GameSerializer.Meta.fields
