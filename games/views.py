@@ -21,12 +21,33 @@ class GameViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         print(request.data)
-        print(request.user)
+        print("test",request.user)
         # Initialize new game
-        p1 = User.objects.get(username = request.data.get('p1'))
-        p2 = User.objects.get(username = request.data.get('p2'))
-        print(p2)
-        print(p1)
+        # print("hehe",request.data.get('p1')
+        p1_username = request.data.get('p1')
+        p2_username = request.data.get('p2')
+
+        if not p1_username or not p2_username:
+            return Response(
+                {"error": "Both player usernames are required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            p1 = User.objects.get(username=p1_username)
+            p2 = User.objects.get(username=p2_username)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "Invalid player"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+        if not p1:
+            return Response(
+                {"error": "Player 1 is required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
         if not p2:
             return Response(
                 {"error": "Player 2 is required"}, 
